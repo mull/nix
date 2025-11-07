@@ -19,4 +19,7 @@
     };
   };
 
+  # Enable font cache for user session
+  fonts.fontconfig.enable = true;
+
 }
