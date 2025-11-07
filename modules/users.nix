@@ -5,7 +5,6 @@
     isNormalUser = true;
     description = "emil";
     extraGroups = ["networkmanager" "wheel" "mull"];
-    shell = pkgs.bashInteractive;
   };
 
 }

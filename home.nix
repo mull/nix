@@ -4,6 +4,9 @@
   home.homeDirectory = "/home/mull";
   home.stateVersion = "25.05";
 
+  # Enable font cache for user session
+  fonts.fontconfig.enable = true;
+
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
@@ -19,7 +22,10 @@
     };
   };
 
-  # Enable font cache for user session
-  fonts.fontconfig.enable = true;
-
+  programs.kitty = {
+    enable = true;
+    settings = {
+      enable_audio_bell = false;
+    };
+  };
 }

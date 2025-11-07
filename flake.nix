@@ -16,6 +16,7 @@
           ./modules/common.nix
           ./modules/networking.nix
           ./modules/users.nix
+          ./modules/shell.nix
           ./modules/desktop.nix
 
           home-manager.nixosModules.home-manager
