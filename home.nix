@@ -6,6 +6,10 @@
 
   programs.home-manager.enable = true;
 
+  home.packages = with pkgs; [
+    home-manager
+  ];
+
   programs.helix = {
     enable = true;
     settings = {
