@@ -41,6 +41,16 @@
     Defaults env_keep += "EDITOR VISUAL XDG_CONFIG_HOME HELIX_RUNTIME"
   '';
 
+  programs.helix = {
+    enable = true;
+    defaultEditor = true;
+    settings = {
+      theme = "gruvbox_dark";
+      editor.line-number = "relative";
+      editor.cursorline = true;
+    };
+  };
+
   # Allow unfree pkgs
   nixpkgs.config.allowUnfree = true;
 }
