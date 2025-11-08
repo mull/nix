@@ -36,15 +36,9 @@ Sweet, now we can apply the config and reboot system. First, we need to select a
 Whenever a command shows {host} you'll need to replace that with the name of your host (without brackets.)
 
 ## Hardware Configuration
-**Important!** The hardware configuration is machine-specific and not included in this repo. You need to copy the auto-generated hardware configuration from your fresh NixOS install:
+The hardware configuration is handled automatically! The repo contains a wrapper file that imports your machine-specific hardware config from `/etc/nixos.backup/hardware-configuration.nix` (which we created earlier when backing up the original `/etc/nixos` directory).
 
-```bash
-# Copy your machine-specific hardware config to the appropriate host directory
-# Replace {host} with your actual host name (e.g., vm or framework)
-cp /etc/nixos.backup/hardware-configuration.nix ~/dev/nix/hosts/{host}/hardware-configuration.nix
-```
-
-This file contains your system's specific filesystem UUIDs and hardware settings.
+This approach keeps your git repo clean while allowing each machine to have its own filesystem UUIDs and hardware settings.
 
 ## Applying the config
 Now that the hardware configuration is in place, we can build and apply our configuration.

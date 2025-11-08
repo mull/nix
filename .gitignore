@@ -1,4 +1,2 @@
-# Hardware configurations are machine-specific and should not be version controlled
-# Each user should generate their own using nixos-generate-config
-**/hardware-configuration.nix
+# Not needed anymore - we use a wrapper that imports from /etc/nixos.backup/
 
