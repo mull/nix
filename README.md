@@ -1,17 +1,23 @@
-# Fresh install
+# Installation
+For UTM on MacOS, use the instructions over at [hosts/vm/README.md](hosts/vm/README.md).
 
-I use a minimal NixOS installation with no desktop environment.
-Common package such as git are not available by default, and to
-make use of this repo we'll have to install it.
+## After install
 
-However, we can use `nix-shell` to get a shell with the necessary packages
-without actually adding them to the system permanently!
+You should now have a working NixOS installation with LUKS encryption.
+When you boot you are asked to unlock the disk, and once you enter the password you chose you ought
+to have booted into the new system.
+
+### Setting your user's password
+Assuming you are logged in as root:
 
 ```bash
-nix-shell -p git
+passwd mull
 ```
 
-Sweet, now we can clone this repo nd use it to set up the syetem.
+Then log out (`exit`) and log in as your user.
+
+# Using the repo
+Sweet, now we can clone this repo and use it to set up the system.
 
 ```bash
 mkdir -p ~/dev/
