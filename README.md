@@ -49,7 +49,7 @@ That would get NixOS stuck (it seems), so rather than use `switch` we will use `
 
 ```bash
 # run this from ~/dev/nix/
-sudo nixos-rebuild boot --flake .#{host}
+sudo nixos-rebuild boot --impure --flake .#{host}
 ```
 
 After a successful build, reboot your system:
