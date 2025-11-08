@@ -3,9 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, ... }:
+  outputs = { self, nixpkgs, home-manager, ... }:
   let
     mkHost = { system, hostPath, username }:
       nixpkgs.lib.nixosSystem {
@@ -16,6 +18,13 @@
           ./modules/users.nix
           ./modules/shell.nix
           ./modules/desktop.nix
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.mull = import ./home.nix;
+          }
           hostPath # host specific config, i.e. hosts/$hostPath/hardware-configuration.nix etc
         ];
       };
