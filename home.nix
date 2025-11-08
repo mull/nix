@@ -28,4 +28,8 @@
       enable_audio_bell = false;
     };
   };
+
+  programs.zed-editor = {
+    enable = true;
+  };
 }
