@@ -87,7 +87,7 @@ fileSystems."/boot" = {
 ```
 
 ### `configuration.nix`
-There is a tiny issue with UTM and LUKS unlocking, so we need to add a kernel parameter to the boot config.
+There is [an issue](https://github.com/utmapp/UTM/issues/3555) with UTM and LUKS unlocking, so we need to add a kernel parameter to the boot config. Otherwise we'll get a black screen.
 Anywhere in `configuration.nix` add the following:
 
 ```nix
