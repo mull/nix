@@ -18,6 +18,7 @@
           ./modules/users.nix
           ./modules/shell.nix
           ./modules/desktop.nix
+          ./modules/tailscale.nix
 
           home-manager.nixosModules.home-manager
           {
