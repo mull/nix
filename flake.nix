@@ -35,6 +35,12 @@
       hostPath = ./hosts/vm/configuration.nix;
       username = "mull";
     };
+    
+    nixosConfigurations.fw13 = mkHost {
+      system = "x86_64-linux";
+      hostPath = ./hosts/fw13/configuration.nix;
+      username = "mull";
+    };
    
   };
 }
