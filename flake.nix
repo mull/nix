@@ -5,9 +5,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... }:
   let
     mkHost = { system, hostPath, username }:
       nixpkgs.lib.nixosSystem {
@@ -19,6 +20,8 @@
           ./modules/shell.nix
           ./modules/desktop.nix
           ./modules/tailscale.nix
+
+          nixos-hardware.nixosModules.framework-amd-ai-300-series
 
           home-manager.nixosModules.home-manager
           {
