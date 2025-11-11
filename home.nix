@@ -16,7 +16,9 @@
     libnotify # provides notify-send
     waybar
     wofi # app launcher
-    playerctl
+    playerctl # media controls
+    hyprcursor 
+    phinger-cursors
 
     # dev tools
     lazygit
@@ -27,6 +29,14 @@
     # email
     evolution
   ];
+
+  home.pointerCursor = {
+    name = "phinger-cursors-light";
+    package = pkgs.phinger-cursors;
+    size = 32;
+    gtk.enable = true;
+    x11.enable = true;
+  };
 
   programs.helix = {
     enable = true;
