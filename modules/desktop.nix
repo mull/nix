@@ -9,6 +9,27 @@
   programs.sway.enable = true;
   programs.hyprland.enable = true;
 
+  # fw31 touchpad
+  services.libinput = {
+    enable = true;
+    touchpad = {
+      naturalScrolling = true;  
+      tapping = true;
+      disableWhileTyping = true;
+      scrollMethod  = "twofinger";
+      accelProfile = "adaptive";
+    };
+  };
+  # libinput exposes the touchpad both as a mouse and a touchpad
+  services.udev.extraRules = ''
+    # Ignore the "Mouse" node
+    SUBSYSTEM=="input", ATTRS{name}=="PIXA3854:00 093A:0274 Mouse", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+
+    # Treat the "real" node ia touchpad
+    SUBSYSTEM=="input", ATTRS{name}=="PIXA3854:00 093A:0274 Touchpad", \
+      ENV{ID_INPUT_TOUCHPAD}="1", ENV{ID_INPUT_MOUSE}="0"
+  '';
+
 
   xdg.autostart.enable = true;
   xdg.portal = {
@@ -81,6 +102,8 @@
       };
     };
   };
+
+  security.pam.services.hyprlock = { };
 
   programs.firefox = {
     enable = true;

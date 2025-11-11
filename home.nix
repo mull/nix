@@ -19,6 +19,7 @@
     playerctl # media controls
     hyprcursor 
     phinger-cursors
+    hypridle # automatic lock screen
 
     # dev tools
     lazygit
@@ -73,6 +74,7 @@
       exec-once = waybar
       exec-once = systemctl --user import-environment PATH XDG_CURRENT_DESKTOP
       exec-once = systemctl --user restart xdg-desktop-portal.service
+      exec-once = hypridle
 
       $terminal = kitty
 
@@ -96,6 +98,17 @@
       bind = $mainMod, 4, workspace, 4
       bind = $mainMod, 5, workspace, 5
 
+      # Move current window to workspace
+      bind = $mainMod SHIFT, 1, movetoworkspace, 1
+      bind = $mainMod SHIFT, 2, movetoworkspace, 2
+      bind = $mainMod SHIFT, 3, movetoworkspace, 3
+      bind = $mainMod SHIFT, 4, movetoworkspace, 4
+      bind = $mainMod SHIFT, 5, movetoworkspace, 5
+
+      # Tests
+      bind = $mainMod, P, pseudo, # dwindle
+      bind = $mainMod, J, togglesplit, # dwindle
+
       # Brightness controls
       bind = , XF86MonbrightnessUp, exec, brightnessctl set 10%+
       bind = , XF86MonbrightnessDown, exec, brightnessctl set 10%-
@@ -111,9 +124,19 @@
       bindl = ,XF86AudioPause, exec, playerctl play-pause
       bindl = ,XF86AudioPlay, exec, playerctl play-pause
 
-      
+      bind  = $mainMod, L, exec, wlogout
 
+      # something is hogging the power button
+      # we can ask systemd to prevent that thing
+      exec-once = systemd-run --user --scope --unit=hypr-wlogout-inhibit \
+        systemd-inhibit --who="Hyprland config" --why="wlogout keybind" \
+        --what=handle-power-key --mode=block sleep infinity
 
+      # and then give it back when we shut down
+      exec-shutdown = systemctl --user stop hypr-wlogout-inhibit.scope
+
+      # Bind the (short press) power button to wlogout
+      bind = , XF86PowerOff, exec, wlogout
 
       # Appearance
       general {
@@ -195,14 +218,63 @@
 
         # dont change focus when mouse hovers over a window
         # i prefer to click
-        follow_mouse = 0
+        follow_mouse = 1
 
-        natural_scroll = true
         # touchpad {
         #   natural_scoll = true
         # }
       }
 
     '';
+  };
+
+  programs.hyprlock.enable = true;
+  programs.wlogout = {
+    enable = true;
+
+    layout = [
+      {
+        label = "lock";
+        text = "Lock";
+        keybind = "l";
+        action = "pidof hyprlock || hyprlock";
+      }
+      {
+        label = "reboot";
+        text = "Reboot";
+        keybind = "r";
+        action = "systemctl reboot";
+      }
+      {
+        label = "shutdown";
+        text = "Shutdown";
+        keybind = "p";
+        action = "systemctl poweroff";
+      }
+    ];
+  };
+
+  services.hypridle = {
+    enable = true;
+
+    settings = {
+      general = {
+        lock_cmd = "pidof hyprlock || hyprlock";
+        before_sleep_cmd = "pidof hyprlock || hyprlock";
+      };
+
+      listener = [
+        # Dim keyboard lights after 15
+        {
+          timeout = 15;
+          on-timeout = "brightnessctl -sd framework_laptop::kbd_backlight set 0";
+          on-resume = "brightnessctl -sd framework_laptop::kbd_backlight set 75";
+        }
+        {
+          timeout = 45;
+          on-timeout = "pidof hyprlock || hyprlock";
+        }
+      ];
+    };
   };
 }
