@@ -23,6 +23,9 @@
 
     # social
     signal-desktop
+
+    # email
+    evolution
   ];
 
   programs.helix = {
