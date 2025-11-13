@@ -21,6 +21,7 @@
           ./modules/desktop.nix
           ./modules/tailscale.nix
           ./modules/gnome-online-accounts.nix
+          ./modules/dev.nix
 
           nixos-hardware.nixosModules.framework-amd-ai-300-series
 

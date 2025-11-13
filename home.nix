@@ -29,7 +29,12 @@
 
     # email
     evolution
+
+    # the big distraction
+    slack
   ];
+
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   home.pointerCursor = {
     name = "phinger-cursors-light";
@@ -67,8 +72,8 @@
       env = XDG_SESSION_DESKTOP,Hyprland
       env = XDG_SESSION_TYPE,wayland
 
-      monitor = eDP-1, 2880x1920@120Hz, auto-left, 2.0
-      monitor = DP-3, 2560x1440@59.95Hz, auto-right, 1.0
+      # monitor = eDP-1, 2880x1920@120Hz, auto-left, 2.0
+      # monitor = DP-3, 2560x1440@59.95Hz, auto-right, 1.0
 
       exec-once = mako
       exec-once = waybar
@@ -240,6 +245,12 @@
         action = "pidof hyprlock || hyprlock";
       }
       {
+        label = "logout";
+        text = "Log out";
+        keybind = "o";
+        action = "hyprctl dispatch exit 0";
+      }
+      {
         label = "reboot";
         text = "Reboot";
         keybind = "r";
@@ -271,7 +282,7 @@
           on-resume = "brightnessctl -sd framework_laptop::kbd_backlight set 75";
         }
         {
-          timeout = 45;
+          timeout = 90;
           on-timeout = "pidof hyprlock || hyprlock";
         }
       ];
