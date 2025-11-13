@@ -78,7 +78,6 @@
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
-      jetbrains-mono
       dejavu_fonts
       noto-fonts
       noto-fonts-cjk-sans
@@ -86,6 +85,7 @@
       liberation_ttf
       font-awesome
       material-design-icons
+      nerd-fonts.jetbrains-mono
     ];
 
     fontconfig = {
@@ -95,7 +95,7 @@
       # subpixelRendering = "rgb";
       # 
       defaultFonts = {
-        monospace = [ "JetBrains Mono" ];
+        monospace = [ "JetBrains Mono Nerd Font" ];
         sansSerif = [ "Noto Sans" ];
         serif = [ "Noto Serif" ];
         emoji = [ "Noto Color Emoji" ];
