@@ -22,6 +22,7 @@
           ./modules/tailscale.nix
           ./modules/gnome-online-accounts.nix
           ./modules/dev.nix
+          ./modules/bluetooth.nix
 
           nixos-hardware.nixosModules.framework-amd-ai-300-series
 
