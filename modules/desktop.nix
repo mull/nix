@@ -7,7 +7,8 @@
   services.dbus.enable = true;
 
   programs.sway.enable = true;
-  programs.hyprland.enable = true;
+  # programs.hyprland.enable = true;
+  programs.niri.enable = true;
 
   # fw31 touchpad
   services.libinput = {
@@ -42,7 +43,7 @@
     ];
     config = {
       hyprland = {
-        default = [ "hyprland" "gtk" ];
+        default = ["niri" "hyprland" "gtk" ];
       };
     };
   };
@@ -62,13 +63,18 @@
     xdg-desktop-portal
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk
+
+    # swaylock
+    swayidle
+    swaylock-effects
+    wlogout
   ];
 
   services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks";
         user = "greeter";
       };
     };
@@ -95,7 +101,7 @@
       # subpixelRendering = "rgb";
       # 
       defaultFonts = {
-        monospace = [ "JetBrains Mono Nerd Font" ];
+        monospace = [ "JetBrainsMono Nerd Font" ];
         sansSerif = [ "Noto Sans" ];
         serif = [ "Noto Serif" ];
         emoji = [ "Noto Color Emoji" ];
@@ -103,7 +109,61 @@
     };
   };
 
-  security.pam.services.hyprlock = { };
+  security.pam.services.swaylock = { };
+
+  # services.swayidle = {
+  #   enable = true;
+
+  #   timeouts = [
+  #     {
+  #       timeout = 15;
+  #       command = "brightnessctl -sd framework_laptop::kbd_backlight set 0";
+  #       resumeCommand = "brightnessctl -sd framework_laptop::kbd_backlight set 75";
+  #     }
+  #     {
+  #       timeout = 30;
+  #       command = "swaylock -efF";
+  #     }
+  #   ];
+
+  #   events = [
+  #     {
+  #       event = "lock";
+  #       command = "swaylock -efF";
+  #     }
+  #     {
+  #       event = "before-sleep";
+  #       command = "swaylock -efF";
+  #     }
+  #   ];
+  # };
+  systemd.user.services.swayidle = {    
+    description = "Idle manager for Wayland (Niri + swaylock)";
+    wantedBy    = [ "graphical-session.target" ];
+    partOf      = [ "graphical-session.target" ];
+
+    unitConfig = {
+      After = [ "graphical-session.target" ];
+      ConditionEnvironment = "WAYLAND_DISPLAY";
+    };
+
+    serviceConfig = {
+      Type = "simple";
+      # Make sure PATH includes system binaries and your user profile
+      # Environment = "PATH=/run/current-system/sw/bin:/home/mull/.nix-profile/bin";
+
+      ExecStart = ''
+        ${pkgs.swayidle}/bin/swayidle -w \
+          timeout 15  'brightnessctl -sd framework_laptop::kbd_backlight set 0' \
+          resume      'brightnessctl -sd framework_laptop::kbd_backlight set 75' \
+          timeout 30  '/home/mull/nix/config/scripts/conditional-swaylock.sh' \
+          timeout 90  'swaylock -efF'
+      '';
+
+      Restart = "always";
+    };
+  };
+
 
   programs.firefox = {
     enable = true;
@@ -111,14 +171,18 @@
     policies = {
       # Extensions!
       ExtensionSettings = {
-        # blocks all addons except the ones specified below
-        # dunno if we keep this
-        "*".installation_mode = "blocked";
+        # "*".installation_mode = "blocked";
 
         "uBlock0@raymondhill.net" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
           installation_mode = "force_installed";
         };
+
+        # vimium
+        # "d7742d87-e61d-4b78-b8a1-b469842139fa" = {
+        #   install_url = "https://addons.mozilla.org/firefox/downloads/latest/vimium_ff/latest.xpi";
+        #   installation_mode = "force_installed";
+        # };
       };
     };
   };

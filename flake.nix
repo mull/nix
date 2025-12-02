@@ -35,7 +35,7 @@
           hostPath # host specific config, i.e. hosts/$hostPath/hardware-configuration.nix etc
         ];
       };
-  in {
+  in {    
     nixosConfigurations.vm = mkHost {
       system = "aarch64-linux";
       hostPath = ./hosts/vm/configuration.nix;

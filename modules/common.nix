@@ -44,4 +44,11 @@
 
   # Allow unfree pkgs
   nixpkgs.config.allowUnfree = true;
+
+  # https://wiki.nixos.org/wiki/FAQ#I've_downloaded_a_binary,_but_I_can't_run_it,_what_can_I_do?
+  # LSP integrations (see https://wiki.nixos.org/wiki/Zed)
+  programs.nix-ld = {
+    enable = true;
+    libraries = pkgs.steam-run.args.multiPkgs pkgs;
+  };
 }

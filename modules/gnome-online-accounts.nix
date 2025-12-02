@@ -16,6 +16,7 @@
 
   environment.systemPackages = with pkgs; [
     seahorse
-    gnome-online-accounts-gtk
+    gnome-control-center
+    # gnome-online-accounts-gtk
   ];
 }

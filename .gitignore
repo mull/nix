@@ -1,2 +1,1 @@
-# Not needed anymore - we use a wrapper that imports from /etc/nixos.backup/
-
+config/safe-wifi-ssids.txt
