@@ -8,6 +8,11 @@
     enable = true;
   };
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    enableZshIntegration = true;
+  };
 
   home.packages = with pkgs; [
     home-manager
@@ -52,7 +57,15 @@
         '';
       }))
 
+    # local LLMs
     ollama
+
+    # Bitwarden for PWs
+    bitwarden-desktop
+    # Client uses
+    keepassxc
+
+    android-studio
   ];
 
   # set gnome nautilus as default file opener
@@ -85,6 +98,10 @@
 
   programs.kitty = {
     enable = true;
+    keybindings = {
+      "f1" = "launch --cwd=current";
+      "f2" = "launch --cwd=current --type=tab";
+    };
     settings = {
       enable_audio_bell = false;
     };
@@ -132,5 +149,71 @@
     Install = {
         WantedBy = [ "default.target" ];
     };
+  };
+
+  programs.chromium = {
+    enable = true;
+    package = pkgs.brave;
+    commandLineArgs = [
+      "--disable-features=WebRtcAllowInputVolumeAdjustment"
+    ];
+  };
+
+  programs.zsh = {
+    enable = true;
+    # enableCompletions = true;
+    syntaxHighlighting.enable = true;
+    autosuggestion.enable = true;
+
+    history = {
+      size = 100000;
+      save = 100000;
+      share = true;
+      extended = true;
+    };
+
+    shellAliases = {
+      ll = "ls -alf";
+      la = "ls -a";
+    };
+
+    zplug = {
+      enable = true;
+      plugins = [
+        { name = "zsh-users/zsh-autosuggestions"; }
+      ];
+    };
+
+    initExtra = ''
+      source "${config.home.homeDirectory}/external-installs/google-cloud-sdk/path.zsh.inc"
+      source "${config.home.homeDirectory}/external-installs/google-cloud-sdk/completion.zsh.inc"
+    '';
+
+    # initextra = ''
+    #    # --- Vim mode for shell editing ---
+    #   bindkey -v
+
+    #   # Up/down history search (works in vim mode too)
+    #   autoload -Uz up-line-or-beginning-search
+    #   autoload -Uz down-line-or-beginning-search
+    #   zle -N up-line-or-beginning-search
+    #   zle -N down-line-or-beginning-search
+    #   bindkey '^[[A' up-line-or-beginning-search
+    #   bindkey '^[[B' down-line-or-beginning-search
+
+    #   # better completion menu
+    #   autoload -uz compinit
+    #   compinit
+
+    #   zstyle ':completion:*' menu select
+    #   zstyle ':completion:*' matcher-list 'm:{a-z}={a-z}' 'r:|[._-]=* r:|=*'
+
+    #   # some sane options
+    #   setopt autocd          # `cd` just by typing dir name
+    #   setopt correct         # spelling correction for commands
+    #   setopt notify          # report background job status asap
+    #   setopt hist_ignore_all_dups
+    #   setopt share_history   # share history across sessions
+    # '';
   };
 }

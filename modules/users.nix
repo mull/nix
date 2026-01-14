@@ -4,7 +4,10 @@
   users.users.mull = {
     isNormalUser = true;
     description = "emil";
-    extraGroups = ["networkmanager" "wheel" "mull" "video" "input"];
+    extraGroups = ["networkmanager" "wheel" "mull" "video" "input"
+      "docker" "adbusers" "kvm"
+
+    ];
   };
 
 }

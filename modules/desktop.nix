@@ -2,12 +2,9 @@
 {
   hardware.graphics = {
     enable = true;
-    enable32Bit = true;
   };
   services.dbus.enable = true;
 
-  programs.sway.enable = true;
-  # programs.hyprland.enable = true;
   programs.niri.enable = true;
 
   # fw31 touchpad
@@ -35,22 +32,19 @@
   xdg.autostart.enable = true;
   xdg.portal = {
     enable = true;
-    # AI suggests keeping the GTK portal for some apps
+
     extraPortals = [
-      pkgs.xdg-desktop-portal
-      pkgs.xdg-desktop-portal-hyprland
+      pkgs.xdg-desktop-portal-gnome
       pkgs.xdg-desktop-portal-gtk
     ];
-    config = {
-      hyprland = {
-        default = ["niri" "hyprland" "gtk" ];
-      };
-    };
   };
 
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
@@ -61,24 +55,27 @@
     # portalllls
     xdg-utils
     xdg-desktop-portal
-    xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk
+
+    # recording screen
+    obs-studio
 
     # swaylock
     swayidle
     swaylock-effects
     wlogout
+
+    xwayland-satellite
+
+    # TODO: move this to modules/networking
+    networkmanagerapplet
   ];
 
-  services.greetd = {
+  services.xserver = {
     enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks";
-        user = "greeter";
-      };
-    };
   };
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
   services.udev.packages = [ pkgs.brightnessctl ];
 
   fonts = {
@@ -111,32 +108,6 @@
 
   security.pam.services.swaylock = { };
 
-  # services.swayidle = {
-  #   enable = true;
-
-  #   timeouts = [
-  #     {
-  #       timeout = 15;
-  #       command = "brightnessctl -sd framework_laptop::kbd_backlight set 0";
-  #       resumeCommand = "brightnessctl -sd framework_laptop::kbd_backlight set 75";
-  #     }
-  #     {
-  #       timeout = 30;
-  #       command = "swaylock -efF";
-  #     }
-  #   ];
-
-  #   events = [
-  #     {
-  #       event = "lock";
-  #       command = "swaylock -efF";
-  #     }
-  #     {
-  #       event = "before-sleep";
-  #       command = "swaylock -efF";
-  #     }
-  #   ];
-  # };
   systemd.user.services.swayidle = {    
     description = "Idle manager for Wayland (Niri + swaylock)";
     wantedBy    = [ "graphical-session.target" ];
@@ -144,20 +115,18 @@
 
     unitConfig = {
       After = [ "graphical-session.target" ];
-      ConditionEnvironment = "WAYLAND_DISPLAY";
+      ConditionEnvironmnet = "XDG_CURRENT_DESKTOP=niri";
     };
 
     serviceConfig = {
       Type = "simple";
-      # Make sure PATH includes system binaries and your user profile
-      # Environment = "PATH=/run/current-system/sw/bin:/home/mull/.nix-profile/bin";
 
       ExecStart = ''
-        ${pkgs.swayidle}/bin/swayidle -w \
-          timeout 15  'brightnessctl -sd framework_laptop::kbd_backlight set 0' \
-          resume      'brightnessctl -sd framework_laptop::kbd_backlight set 75' \
-          timeout 30  '/home/mull/nix/config/scripts/conditional-swaylock.sh' \
-          timeout 90  'swaylock -efF'
+        ${pkgs.swayidle}/bin/swayidle -d -w \
+          timeout 15    '${pkgs.brightnessctl}/bin/brightnessctl -sd framework_laptop::kbd_backlight set 0' \
+          resume        '${pkgs.brightnessctl}/bin/brightnessctl -sd framework_laptop::kbd_backlight set 75' \
+          timeout 30    '/home/mull/nix/config/scripts/conditional-swaylock.sh' \
+          timeout 180   '${pkgs.swaylock-effects}/bin/swaylock -efF'
       '';
 
       Restart = "always";
