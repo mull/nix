@@ -61,8 +61,8 @@
     obs-studio
 
     # swaylock
-    swayidle
-    swaylock-effects
+    # swayidle
+    # swaylock-effects
     wlogout
 
     xwayland-satellite
@@ -106,32 +106,32 @@
     };
   };
 
-  security.pam.services.swaylock = { };
+  # security.pam.services.swaylock = { };
 
-  systemd.user.services.swayidle = {    
-    description = "Idle manager for Wayland (Niri + swaylock)";
-    wantedBy    = [ "graphical-session.target" ];
-    partOf      = [ "graphical-session.target" ];
+  # systemd.user.services.swayidle = {    
+  #   description = "Idle manager for Wayland (Niri + swaylock)";
+  #   wantedBy    = [ "graphical-session.target" ];
+  #   partOf      = [ "graphical-session.target" ];
 
-    unitConfig = {
-      After = [ "graphical-session.target" ];
-      ConditionEnvironmnet = "XDG_CURRENT_DESKTOP=niri";
-    };
+  #   unitConfig = {
+  #     After = [ "graphical-session.target" ];
+  #     ConditionEnvironmnet = "XDG_CURRENT_DESKTOP=niri";
+  #   };
 
-    serviceConfig = {
-      Type = "simple";
+  #   serviceConfig = {
+  #     Type = "simple";
 
-      ExecStart = ''
-        ${pkgs.swayidle}/bin/swayidle -d -w \
-          timeout 15    '${pkgs.brightnessctl}/bin/brightnessctl -sd framework_laptop::kbd_backlight set 0' \
-          resume        '${pkgs.brightnessctl}/bin/brightnessctl -sd framework_laptop::kbd_backlight set 75' \
-          timeout 30    '/home/mull/nix/config/scripts/conditional-swaylock.sh' \
-          timeout 180   '${pkgs.swaylock-effects}/bin/swaylock -efF'
-      '';
+  #     ExecStart = ''
+  #       ${pkgs.swayidle}/bin/swayidle -d -w \
+  #         timeout 15    '${pkgs.brightnessctl}/bin/brightnessctl -sd framework_laptop::kbd_backlight set 0' \
+  #         resume        '${pkgs.brightnessctl}/bin/brightnessctl -sd framework_laptop::kbd_backlight set 75' \
+  #         timeout 30    '/home/mull/nix/config/scripts/conditional-swaylock.sh' \
+  #         timeout 180   '${pkgs.swaylock-effects}/bin/swaylock -efF'
+  #     '';
 
-      Restart = "always";
-    };
-  };
+  #     Restart = "always";
+  #   };
+  # };
 
 
   programs.firefox = {
