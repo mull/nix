@@ -51,4 +51,9 @@
     enable = true;
     libraries = pkgs.steam-run.args.multiPkgs pkgs;
   };
+
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
 }

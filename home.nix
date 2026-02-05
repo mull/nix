@@ -18,6 +18,7 @@
     home-manager
 
     nautilus
+    appimage-run
 
     # Wayland desktop utilities
     mako # notification
