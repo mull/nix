@@ -39,6 +39,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit pkgsUnstable; };
+            home-manager.backupFileExtension = "backup";
             home-manager.users.mull = import ./home.nix;
           }
           hostPath # host specific config, i.e. hosts/$hostPath/hardware-configuration.nix etc
