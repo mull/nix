@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgsUnstable, ... }:
 
 {
   system.stateVersion = "25.05";
@@ -33,7 +33,7 @@
   environment.systemPackages = with pkgs; [
     bottom
     git
-    helix
+    pkgsUnstable.helix
   ];
   environment.variables.EDITOR = "hx";
   environment.variables.VISUAL = "hx";

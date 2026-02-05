@@ -2,17 +2,25 @@
   description = "mull's nixos setup";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, ... }:
   let
     mkHost = { system, hostPath, username }:
+      let
+        pkgsUnstable = import nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+        };
+      in
       nixpkgs.lib.nixosSystem {
         inherit system;
+        specialArgs = { inherit pkgsUnstable; };
         modules = [
           ./modules/common.nix
           ./modules/networking.nix
@@ -30,6 +38,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit pkgsUnstable; };
             home-manager.users.mull = import ./home.nix;
           }
           hostPath # host specific config, i.e. hosts/$hostPath/hardware-configuration.nix etc

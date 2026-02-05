@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, pkgsUnstable, inputs, ... }:
 {
   home.username = "mull";
   home.homeDirectory = "/home/mull";
@@ -25,28 +25,26 @@
     waybar
     wofi # app launcher
     playerctl # media controls
-    hyprcursor 
     phinger-cursors
-    hypridle # automatic lock screen
     # swaybg # background for niri
 
     # dev tools
-    lazygit
+    pkgsUnstable.lazygit
 
     # social
-    signal-desktop
+    pkgsUnstable.signal-desktop
 
     # email
     evolution
 
     # the big distraction
-    slack
+    pkgsUnstable.slack
 
     # matrix client
-    fluffychat
+    pkgsUnstable.fluffychat
 
-    code-cursor
-    zed-editor
+    pkgsUnstable.code-cursor
+    pkgsUnstable.zed-editor
 
     # spotify struggles with wayland
       (spotify.overrideAttrs (old: {
@@ -65,7 +63,7 @@
     # Client uses
     keepassxc
 
-    android-studio
+    # android-studio
   ];
 
   # set gnome nautilus as default file opener
@@ -89,6 +87,7 @@
 
   programs.helix = {
     enable = true;
+    package = pkgsUnstable.helix;
     settings = {
       theme = "gruvbox_dark";
       editor.line-number = "relative";
@@ -184,7 +183,7 @@
       ];
     };
 
-    initExtra = ''
+    initContent = ''
       source "${config.home.homeDirectory}/external-installs/google-cloud-sdk/path.zsh.inc"
       source "${config.home.homeDirectory}/external-installs/google-cloud-sdk/completion.zsh.inc"
     '';
