@@ -65,6 +65,8 @@
     keepassxc
 
     # android-studio
+
+    pkgsUnstable.vlc
   ];
 
   # set gnome nautilus as default file opener
